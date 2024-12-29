@@ -5,28 +5,6 @@ info:
 servers:
   - url: /api/1/
 paths:
-  /:
-    get:
-      summary: Root endpoint
-      tags:
-      - root
-      responses:
-        '200':
-          description: Successful response
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  message:
-                    type: string
-                    example: Hello, world!
-        default:
-          description: unexpected error
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/Error"
   /blocked:
     get:
       summary: Blocked endpoint

@@ -6,6 +6,8 @@ from asgi_claim_validator import ClaimValidatorMiddleware
 
 JWT_LIFETIME_SECONDS = 3600
 
+# Mock claims for testing purposes, ideally this should be fetched from the JWT token.
+# usually with connexion the claims are accessible via the state object of connexion.
 claims_mock = lambda: {
     "sub": "admin",
     "iss": "https://example.com",
@@ -17,10 +19,10 @@ claims_mock = lambda: {
 
 claim_validation_config = {
     "skipped": {
-        "^/api/1/$": ["get"],
         "^/api/1/openapi.json$": ["get"],
-        "^/api/1/skipped$": ["get"],
-        "^/api/1/ui.*": ["get"],
+        "^/api/1/skipped/?$": ["get"],
+        "^/api/1/ui/?$": ["post"],
+        "^/api/1/ui/.+$": ["get"],
     },
     "secured": {
         "^/api/1/secured$": {
@@ -40,7 +42,6 @@ claim_validation_config = {
     },
     "claims": claims_mock,
 }
-
 
 app = AsyncApp(__name__, specification_dir="spec")
 app.add_api("openapi.yaml", resolver=RestyResolver("api"))

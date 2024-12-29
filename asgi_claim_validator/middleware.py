@@ -164,11 +164,11 @@ class ClaimValidatorMiddleware:
                 except MissingClaimError as e:
                     log.error(f"Missing claim error: {e}")
                     if self.raise_on_missing_claim:
-                        raise MissingEssentialClaimException(path=path, method=method, claim=e.claim)
+                        raise MissingEssentialClaimException(path=path, method=method, claim=getattr(claims_requests, "options", "n/a"))
                 except InvalidClaimError as e:
                     log.error(f"Invalid claim error: {e}")
                     if self.raise_on_invalid_claim:
-                        raise InvalidClaimValueException(path=path, method=method, claim=e.claim)
+                        raise InvalidClaimValueException(path=path, method=method, claim=getattr(claims_requests, "options", "n/a"))
                 except Exception as e:
                     log.error(f"Unexpected error during claim validation: {e}")
                     raise

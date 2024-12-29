@@ -86,7 +86,7 @@ class ClaimValidatorMiddleware:
             # This code compiles regular expressions for each path in self.skipped and associates them with the 
             # corresponding HTTP methods in uppercase.
             self.skipped_compiled = {
-                re.compile(path, flags=self.re_flags): (
+                re.compile(path, flags=self.re_flags): set(
                     method.upper() for method in methods
                 ) for path, methods in self.skipped.items()
             }

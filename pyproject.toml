@@ -46,15 +46,16 @@ packages = [
 ]
 
 [tool.poetry.dependencies]
-python = ">=3.11"
+python = ">=3.11,<4.0"
 starlette = "^0.43.0"
 joserfc = "^1.0.1"
 
 [tool.poetry.group.dev.dependencies]
-uvicorn = "*"
+connexion = {version="*", extras=["swagger-ui"]}
+httpx = "*"
 pytest = "*"
 starlette = "*"
-httpx = "*"
+uvicorn = "*"
 
 [build-system]
 requires = ["poetry-core"]

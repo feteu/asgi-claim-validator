@@ -76,8 +76,20 @@ class ClaimValidatorMiddleware:
             raise ValueError("claims must be a callable")
         try:
             self.re_flags = re.IGNORECASE if self.re_ignorecase else re.NOFLAG
-            self.secured_compiled = {re.compile(path, flags=self.re_flags): methods for path, methods in self.secured.items()}
-            self.skipped_compiled = {re.compile(path, flags=self.re_flags): set(methods) for path, methods in self.skipped.items()}
+            # This code compiles regular expressions for each path in self.secured and associates them with a 
+            # dictionary of HTTP methods in uppercase and their corresponding claims.
+            self.secured_compiled = {
+                re.compile(path, flags=self.re_flags): { 
+                    method.upper(): claims for method, claims in methods.items()
+                } for path, methods in self.secured.items()
+            }
+            # This code compiles regular expressions for each path in self.skipped and associates them with the 
+            # corresponding HTTP methods in uppercase.
+            self.skipped_compiled = {
+                re.compile(path, flags=self.re_flags): (
+                    method.upper() for method in methods
+                ) for path, methods in self.skipped.items()
+            }
         except re.error as e:
             raise ValueError(f"Invalid regular expression in secured or skipped paths: {e}")
 
@@ -101,7 +113,7 @@ class ClaimValidatorMiddleware:
             await self.app(scope, receive, send)
             return
 
-        method = scope["method"].lower()
+        method = scope["method"].upper()
         path = scope["path"]
         claims = self.claims()
 

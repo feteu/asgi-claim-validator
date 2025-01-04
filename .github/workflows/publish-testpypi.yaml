@@ -15,7 +15,7 @@ jobs:
     runs-on: ubuntu-latest
     environment:
       name: testpypi
-      url: https://test.pypi.org/p/asgi-request-duration
+      url: https://test.pypi.org/p/asgi-claim-validator
     permissions:
       id-token: write
 

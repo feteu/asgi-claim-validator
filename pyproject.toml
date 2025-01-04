@@ -47,7 +47,7 @@ packages = [
 
 [tool.poetry.dependencies]
 python = ">=3.11,<4.0"
-starlette = "^0.43.0"
+starlette = "^0.45.2"
 joserfc = "^1.0.1"
 
 [tool.poetry.group.dev.dependencies]

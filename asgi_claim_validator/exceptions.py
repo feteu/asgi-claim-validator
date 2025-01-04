@@ -6,11 +6,17 @@ class ClaimValidatorException(Exception):
 
     Attributes:
         description (str): A brief description of the error.
+        status (int): The HTTP status code.
+        title (str): A short HTTP status message.
     """
     description: str = "A claim validator error occurred."
+    status: int = 400
+    title: str = "Bad Request"
 
-    def __init__(self, detail: str = description) -> None:
+    def __init__(self, detail: str = description, status: int = status, title: str = title) -> None:
         self.detail: str = detail
+        self.status: int = status
+        self.title: str = title
         super().__init__(self.detail)
 
 class UnspecifiedMethodAuthenticationException(ClaimValidatorException):
@@ -25,18 +31,24 @@ class UnspecifiedMethodAuthenticationException(ClaimValidatorException):
         method (str): The HTTP method of the request.
         path (str): The path of the request.
         detail (str): A detailed error message.
+        status (int): The HTTP status code.
+        title (str): A short HTTP status message.
     """
     description: str = (
         "Authentication configuration missing for the specified method. "
         "Ensure that an appropriate authentication definition is provided "
         "for this method and try again."
     )
+    status: int = 401
+    title: str = "Unauthorized"
 
-    def __init__(self, method: str, path: str, detail: str = description) -> None:
+    def __init__(self, method: str, path: str, detail: str = description, status: int = status, title: str = title) -> None:
         self.method: str = method
         self.path: str = path
         self.detail: str = detail
-        super().__init__(self.detail)
+        self.status: int = status
+        self.title: str = title
+        super().__init__(self.detail, self.status, self.title)
 
     def __str__(self) -> str:
         return f"Method authentication not specified {self.method} {self.path} ({self.detail})"
@@ -53,18 +65,24 @@ class UnspecifiedPathAuthenticationException(ClaimValidatorException):
         method (str): The HTTP method of the request.
         path (str): The path of the request.
         detail (str): A detailed error message.
+        status (int): The HTTP status code.
+        title (str): A short HTTP status message.
     """
     description: str = (
         "Authentication configuration missing for the specified path. "
         "Ensure that an appropriate authentication definition is provided "
         "for this path and try again."
     )
+    status: int = 401
+    title: str = "Unauthorized"
 
-    def __init__(self, method: str, path: str, detail: str = description) -> None:
+    def __init__(self, method: str, path: str, detail: str = description, status: int = status, title: str = title) -> None:
         self.method: str = method
         self.path: str = path
         self.detail: str = detail
-        super().__init__(self.detail)
+        self.status: int = status
+        self.title: str = title
+        super().__init__(self.detail, self.status, self.title)
 
     def __str__(self) -> str:
         return f"Path authentication not specified {self.method} {self.path} ({self.detail})"
@@ -81,17 +99,23 @@ class UnauthenticatedRequestException(ClaimValidatorException):
         path (str): The path of the request.
         method (str): The HTTP method of the request.
         detail (str): A detailed error message.
+        status (int): The HTTP status code.
+        title (str): A short HTTP status message.
     """
     description: str = (
         "The request could not be authenticated. Ensure that the necessary "
         "claims are provided and try again."
     )
+    status: int = 401
+    title: str = "Unauthorized"
 
-    def __init__(self, path: str, method: str, detail: str = description) -> None:
+    def __init__(self, path: str, method: str, detail: str = description, status: int = status, title: str = title) -> None:
         self.path: str = path
         self.method: str = method
         self.detail: str = detail
-        super().__init__(self.detail)
+        self.status: int = status
+        self.title: str = title
+        super().__init__(self.detail, self.status, self.title)
 
     def __str__(self) -> str:
         return f"Unauthenticated request {self.method} {self.path} ({self.detail})"
@@ -107,23 +131,29 @@ class MissingEssentialClaimException(ClaimValidatorException):
     Attributes:
         path (str): The path of the request.
         method (str): The HTTP method of the request.
-        claim (str): The name of the missing claim.
+        claims (str): The claims in the request.
         detail (str): A detailed error message.
+        status (int): The HTTP status code.
+        title (str): A short HTTP status message.
     """
     description: str = (
         "An essential claim is missing from the request. Ensure that the "
         "necessary claims are provided and try again."
     )
+    status: int = 403
+    title: str = "Forbidden"
 
-    def __init__(self, path: str, method: str, claim: str, detail: str = description) -> None:
+    def __init__(self, path: str, method: str, claims: str, detail: str = description, status: int = status, title: str = title) -> None:
         self.path: str = path
         self.method: str = method
-        self.claim: str = claim
+        self.claims: str = claims
         self.detail: str = detail
-        super().__init__(self.detail)
+        self.status: int = status
+        self.title: str = title
+        super().__init__(self.detail, self.status, self.title)
 
     def __str__(self) -> str:
-        return f"Missing essential claim {self.claim} in request {self.method} {self.path} ({self.detail})"
+        return f"Missing essential claims in request {self.method} {self.path} {self.claims} ({self.detail})"
 
 class InvalidClaimValueException(ClaimValidatorException):
     """Exception raised when a claim has an invalid value.
@@ -136,23 +166,29 @@ class InvalidClaimValueException(ClaimValidatorException):
     Attributes:
         path (str): The path of the request.
         method (str): The HTTP method of the request.
-        claim (str): The name of the invalid claim.
+        claims (str): The claims in the request.
         detail (str): A detailed error message.
+        status (int): The HTTP status code.
+        title (str): A short HTTP status message.
     """
     description: str = (
         "A claim has an invalid value. Ensure that the claims provided have "
         "valid values and try again."
     )
+    status: int = 403
+    title: str = "Forbidden"
 
-    def __init__(self, path: str, method: str, claim: str, detail: str = description) -> None:
+    def __init__(self, path: str, method: str, claims: str, detail: str = description, status: int = status, title: str = title) -> None:
         self.path: str = path
         self.method: str = method
-        self.claim: str = claim
+        self.claims: str = claims
         self.detail: str = detail
-        super().__init__(self.detail)
+        self.status: int = status
+        self.title: str = title
+        super().__init__(self.detail, self.status, self.title)
 
     def __str__(self) -> str:
-        return f"Invalid claim value {self.claim} in request {self.method} {self.path} ({self.detail})"
+        return f"Invalid claims value in request {self.method} {self.path} {self.claims} ({self.detail})"
     
 class InvalidClaimsTypeException(ClaimValidatorException):
     """Exception raised when the claims provided are not of the expected type.
@@ -164,20 +200,57 @@ class InvalidClaimsTypeException(ClaimValidatorException):
     Attributes:
         path (str): The path of the request.
         method (str): The HTTP method of the request.
+        type_received (str): The type of the claims received.
+        type_expected (str): The expected type of the claims.
         detail (str): A detailed error message.
+        status (int): The HTTP status code.
+        title (str): A short HTTP status message.
     """
     description: str = (
         "The claims provided are not of the expected type. Ensure that the claims are "
         "correctly formatted as a dictionary and try again."
     )
+    status: int = 400
+    title: str = "Bad Request"
 
-    def __init__(self, path: str, method: str, type_received: str, type_expected: str, detail: str = description) -> None:
+    def __init__(self, path: str, method: str, type_received: str, type_expected: str, detail: str = description, status: int = status, title: str = title) -> None:
         self.path: str = path
         self.method: str = method
         self.type_received: str = type_received
         self.type_expected: str = type_expected
         self.detail: str = detail
-        super().__init__(self.detail)
+        self.status: int = status
+        self.title: str = title
+        super().__init__(self.detail, self.status, self.title)
 
     def __str__(self) -> str:
         return f"Invalid claims type in request {self.method} {self.path} (received: {self.type_received}; expected: {self.type_expected}) ({self.detail})"
+
+class InvalidClaimsConfigurationException(ClaimValidatorException):
+    """Exception raised when the claims configuration is invalid.
+
+    This exception is used to indicate that the claims callable provided
+    does not return an instance of Claims. It is raised during the initialization
+    of the ClaimValidatorMiddleware when the `claims` parameter is not callable
+    or does not return the expected type.
+
+    Attributes:
+        detail (str): A detailed error message.
+        status (int): The HTTP status code.
+        title (str): A short HTTP status message.
+    """
+    description: str = (
+        "The claims callable must return an instance of Claims. Ensure that the "
+        "claims callable is correctly referenced and returns the expected type."
+    )
+    status: int = 500
+    title: str = "Internal Server Error"
+
+    def __init__(self, detail: str = description, status: int = status, title: str = title) -> None:
+        self.detail: str = detail
+        self.status: int = status
+        self.title: str = title
+        super().__init__(self.detail, self.status, self.title)
+
+    def __str__(self) -> str:
+        return f"Invalid claims callable: {self.detail}"

@@ -2,11 +2,11 @@ import logging
 import re
 from dataclasses import dataclass, field
 from joserfc.errors import InvalidClaimError, MissingClaimError
-from joserfc.jwt import ClaimsOption, JWTClaimsRegistry
+from joserfc.jwt import JWTClaimsRegistry
 from starlette.types import ASGIApp, Message, Receive, Scope, Send
 from asgi_claim_validator.constants import (
     _DEFAULT_ANY_HTTP_METHOD,
-    _DEFAULT_CLAIMS,
+    _DEFAULT_CLAIMS_CALLABLE,
     _DEFAULT_RAISE_ON_INVALID_CLAIM,
     _DEFAULT_RAISE_ON_INVALID_CLAIMS_TYPE,
     _DEFAULT_RAISE_ON_MISSING_CLAIM,
@@ -17,6 +17,7 @@ from asgi_claim_validator.constants import (
     _DEFAULT_SECURED,
     _DEFAULT_SKIPPED,
 )
+from asgi_claim_validator.decorators import validate_claims_callable
 from asgi_claim_validator.exceptions import (
     InvalidClaimsTypeException,
     InvalidClaimValueException,
@@ -24,6 +25,13 @@ from asgi_claim_validator.exceptions import (
     UnauthenticatedRequestException,
     UnspecifiedMethodAuthenticationException,
     UnspecifiedPathAuthenticationException,
+)
+from asgi_claim_validator.types import (
+    ClaimsCallableType, 
+    SecuredCompiledType, 
+    SecuredType, 
+    SkippedCompiledType, 
+    SkippedType,
 )
 
 log = logging.getLogger(__name__)
@@ -35,7 +43,7 @@ class ClaimValidatorMiddleware:
 
     Attributes:
         app (ASGIApp): The ASGI application.
-        claims (callable): A callable that returns the claims.
+        claims_callable (ClaimsCallableType): A callable that returns the claims.
         raise_on_invalid_claim (bool): Flag to raise an exception on invalid claims.
         raise_on_invalid_claims_type (bool): Flag to raise an exception on invalid claims type.
         raise_on_missing_claim (bool): Flag to raise an exception on missing claims.
@@ -44,36 +52,31 @@ class ClaimValidatorMiddleware:
         raise_on_unspecified_path (bool): Flag to raise an exception on unspecified paths.
         re_flags (re.RegexFlag): Regular expression flags.
         re_ignorecase (bool): Flag to ignore case in regular expressions.
-        secured_compiled (dict): Compiled secured paths and methods.
-        secured (dict): Secured paths and methods.
-        skipped_compiled (dict): Compiled skipped paths and methods.
-        skipped (dict): Skipped paths and methods.
+        secured_compiled (SecuredCompiledType): Compiled secured paths and methods.
+        secured (SecuredType): Secured paths and methods.
+        skipped_compiled (SkippedCompiledType): Compiled skipped paths and methods.
+        skipped (SkippedType): Skipped paths and methods.
     """
     app: ASGIApp
-    claims: callable = field(default=_DEFAULT_CLAIMS)
+    claims_callable: ClaimsCallableType = field(default=_DEFAULT_CLAIMS_CALLABLE)
     raise_on_invalid_claim: bool = field(default=_DEFAULT_RAISE_ON_INVALID_CLAIM)
     raise_on_invalid_claims_type: bool = field(default=_DEFAULT_RAISE_ON_INVALID_CLAIMS_TYPE)
     raise_on_missing_claim: bool = field(default=_DEFAULT_RAISE_ON_MISSING_CLAIM)
     raise_on_unauthenticated: bool = field(default=_DEFAULT_RAISE_ON_UNAUTHENTICATED)
     raise_on_unspecified_method: bool = field(default=_DEFAULT_RAISE_ON_UNSPECIFIED_METHOD)
     raise_on_unspecified_path: bool = field(default=_DEFAULT_RAISE_ON_UNSPECIFIED_PATH)
-    re_flags: re.RegexFlag = field(init=False)
+    re_flags: re.RegexFlag = field(default=re.NOFLAG, init=False)
     re_ignorecase: bool = field(default=_DEFAULT_RE_IGNORECASE)
-    secured_compiled: dict[re.Pattern, dict[str, dict[str, ClaimsOption]]] = field(init=False)
-    secured: dict[str, dict[str, dict[str, ClaimsOption]]] = field(default_factory=lambda: _DEFAULT_SECURED)
-    skipped_compiled: dict[re.Pattern, set[str]] = field(init=False)
-    skipped: dict[str, list[str]] = field(default_factory=lambda: _DEFAULT_SKIPPED)
+    secured_compiled: SecuredCompiledType = field(default_factory=dict, init=False)
+    secured: SecuredType = field(default_factory=lambda: _DEFAULT_SECURED)
+    skipped_compiled: SkippedCompiledType = field(default_factory=dict, init=False)
+    skipped: SkippedType = field(default_factory=lambda: _DEFAULT_SKIPPED)
   
+    @validate_claims_callable()
     def __post_init__(self) -> None:
         """
         Post-initialization method to compile regular expressions for secured and skipped paths.
         """
-        if not isinstance(self.secured, dict):
-            raise ValueError("secured must be a dictionary")
-        if not isinstance(self.skipped, dict):
-            raise ValueError("skipped must be a dictionary")
-        if not callable(self.claims):
-            raise ValueError("claims must be a callable")
         try:
             self.re_flags = re.IGNORECASE if self.re_ignorecase else re.NOFLAG
             # This code compiles regular expressions for each path in self.secured and associates them with a 
@@ -115,7 +118,7 @@ class ClaimValidatorMiddleware:
 
         method = scope["method"].upper()
         path = scope["path"]
-        claims = self.claims()
+        claims = self.claims_callable()
 
         # Check if the request path matches any skipped path patterns and if the request method is allowed for that path.
         # If both conditions are met, forward the request to the next middleware or application.
@@ -162,13 +165,13 @@ class ClaimValidatorMiddleware:
                     claims_requests = JWTClaimsRegistry(**fp_claims)
                     claims_requests.validate(claims)
                 except MissingClaimError as e:
-                    log.error(f"Missing claim error: {e}")
+                    log.debug(f"Missing claim: {e}")
                     if self.raise_on_missing_claim:
-                        raise MissingEssentialClaimException(path=path, method=method, claim=getattr(claims_requests, "options", "n/a"))
+                        raise MissingEssentialClaimException(path=path, method=method, claims=claims)
                 except InvalidClaimError as e:
-                    log.error(f"Invalid claim error: {e}")
+                    log.debug(f"Invalid claim: {e}")
                     if self.raise_on_invalid_claim:
-                        raise InvalidClaimValueException(path=path, method=method, claim=getattr(claims_requests, "options", "n/a"))
+                        raise InvalidClaimValueException(path=path, method=method, claims=claims)
                 except Exception as e:
                     log.error(f"Unexpected error during claim validation: {e}")
                     raise

@@ -1,7 +1,7 @@
 from asgi_claim_validator.types import SecuredType, SkippedType, ClaimsCallableType
 
 _DEFAULT_ANY_HTTP_METHODS: str = "*"
-_DEFAULT_ALL_HTTP_METHODS: list[str] = ["CONNECT", "DELETE", "GET", "HEAD", "OPTIONS", "PATCH", "POST", "PUT", "TRACE"]
+_DEFAULT_ALL_HTTP_METHODS: list[str] = ["CONNECT", "DELETE", "GET", "HEAD", "OPTIONS", "PATCH", "POST", "PUT", "TRACE",]
 _DEFAULT_CLAIMS_CALLABLE: ClaimsCallableType = lambda: dict()
 _DEFAULT_RAISE_ON_INVALID_CLAIM: bool = True
 _DEFAULT_RAISE_ON_INVALID_CLAIMS_TYPE: bool = True

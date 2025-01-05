@@ -1,6 +1,7 @@
 import logging
 from collections.abc import Callable
 from jsonschema import validate
+from jsonschema.exceptions import SchemaError, ValidationError
 from asgi_claim_validator.constants import (
     _DEFAULT_CLAIMS_CALLABLE, 
     _DEFAULT_SECURED_JSON_SCHEMA,
@@ -16,36 +17,36 @@ log = logging.getLogger(__name__)
 
 def validate_claims_callable() -> Callable:
     def decorator(func) -> Callable:
-        def wrapper(*args, **kwargs) -> Callable:
-            claims = kwargs.get('claims', _DEFAULT_CLAIMS_CALLABLE)
+        def wrapper(self, *args, **kwargs) -> Callable:
+            claims = getattr(self, 'claims_callable', _DEFAULT_CLAIMS_CALLABLE)
             if not isinstance(claims, Callable):
                 raise InvalidClaimsConfigurationException()
-            return func(*args, **kwargs)
+            return func(self, *args, **kwargs)
         return wrapper
     return decorator
 
 def validate_secured() -> Callable:
     def decorator(func) -> Callable:
-        def wrapper(*args, **kwargs) -> Callable:
-            secured = kwargs.get('secured')
+        def wrapper(self, *args, **kwargs) -> Callable:
+            secured = getattr(self, 'secured1', None)
             try:
                 validate(instance=secured, schema=_DEFAULT_SECURED_JSON_SCHEMA)
-            except Exception as e:
+            except (SchemaError, ValidationError) as e:
                 log.error(e)
                 raise InvalidSecuredConfigurationException()
-            return func(*args, **kwargs)
+            return func(self, *args, **kwargs)
         return wrapper
     return decorator
 
 def validate_skipped() -> Callable:
     def decorator(func) -> Callable:
-        def wrapper(*args, **kwargs) -> Callable:
-            skipped = kwargs.get('skipped')
+        def wrapper(self, *args, **kwargs) -> Callable:
+            skipped = getattr(self, 'skipped', None)
             try:
                 validate(instance=skipped, schema=_DEFAULT_SKIPPED_JSON_SCHEMA)
-            except Exception as e:
+            except (SchemaError, ValidationError) as e:
                 log.error(e)
                 raise InvalidSkippedConfigurationException()
-            return func(*args, **kwargs)
+            return func(self, *args, **kwargs)
         return wrapper
     return decorator

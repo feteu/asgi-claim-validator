@@ -11,7 +11,7 @@ _DEFAULT_RAISE_ON_UNSPECIFIED_METHOD: bool = True
 _DEFAULT_RAISE_ON_UNSPECIFIED_PATH: bool = True
 _DEFAULT_RE_IGNORECASE: bool = False
 _DEFAULT_SECURED: SecuredType = {
-    "^.+$": {
+    "^$": {
         f"{_DEFAULT_ANY_HTTP_METHODS}": {
             "sub": {
                 "essential": False, 
@@ -21,11 +21,12 @@ _DEFAULT_SECURED: SecuredType = {
     },
 },
 _DEFAULT_SKIPPED: SkippedType = {
-    "^.+$": [
-        "TRACE",
+    "^$": [
+        f"{_DEFAULT_ANY_HTTP_METHODS}",
     ],
 }
 _DEFAULT_SKIPPED_JSON_SCHEMA: dict = {
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
     "title": "Skipped JSON Schema",
     "description": "Schema for validating skipped configuration",
     "type": "object",
@@ -37,7 +38,7 @@ _DEFAULT_SKIPPED_JSON_SCHEMA: dict = {
                 "oneOf": [
                     {
                         "type": "string",
-                        "pattern": f"^(?i:{"|".join(_DEFAULT_ALL_HTTP_METHODS)}|{_DEFAULT_ANY_HTTP_METHODS})$",
+                        "pattern": f"^(?i:{"|".join((*_DEFAULT_ALL_HTTP_METHODS, *_DEFAULT_ANY_HTTP_METHODS))})$",
                     },
                     { 
                         "type": "null",
@@ -50,6 +51,7 @@ _DEFAULT_SKIPPED_JSON_SCHEMA: dict = {
     "unevaluatedProperties": False,
 },
 _DEFAULT_SECURED_JSON_SCHEMA: dict = {
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
     "title": "Secured JSON Schema",
     "description": "Schema for validating secured configuration",
     "type": "object",
@@ -59,7 +61,7 @@ _DEFAULT_SECURED_JSON_SCHEMA: dict = {
             "type": "object",
             "minProperties": 1,
             "patternProperties": {
-                f"^(?i:{"|".join(_DEFAULT_ALL_HTTP_METHODS)}|{_DEFAULT_ANY_HTTP_METHODS})$": {
+                f"^(?i:{"|".join((*_DEFAULT_ALL_HTTP_METHODS, *_DEFAULT_ANY_HTTP_METHODS))})$": {
                     "type": "object",
                     "minProperties": 1,
                     "patternProperties": {

@@ -2,7 +2,7 @@ import json
 import time
 import uvicorn
 from connexion import AsyncApp, RestyResolver
-from connexion.exceptions import OAuthProblem, problem
+from connexion.exceptions import problem
 from connexion.lifecycle import ConnexionRequest, ConnexionResponse
 from connexion.middleware import MiddlewarePosition
 from asgi_claim_validator import ClaimValidatorMiddleware

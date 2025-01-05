@@ -129,7 +129,7 @@ class ClaimValidatorMiddleware:
         # Check if the request path matches any skipped path patterns and if the request method is allowed for that path.
         # If both conditions are met, forward the request to the next middleware or application.
         for p in self._search_patterns_in_string(path, self.skipped_compiled.keys()):
-            if method in self.skipped_compiled[p]:
+            if any(sc_method in (method, _DEFAULT_ANY_HTTP_METHODS) for sc_method in self.skipped_compiled[p]):
                 await self.app(scope, receive, send)
                 return
 

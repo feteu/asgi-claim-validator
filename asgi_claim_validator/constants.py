@@ -1,3 +1,4 @@
+import re
 from asgi_claim_validator.types import SecuredType, SkippedType, ClaimsCallableType
 
 _DEFAULT_ANY_HTTP_METHODS: str = "*"
@@ -12,6 +13,7 @@ _DEFAULT_ALL_HTTP_METHODS: list[str] = [
     "PUT", 
     "TRACE",
 ]
+_DEFAULT_ALL_HTTP_METHODS_REGEX_GROUP: str = f"({"|".join(map(re.escape, (*_DEFAULT_ALL_HTTP_METHODS, *_DEFAULT_ANY_HTTP_METHODS)))})"
 _DEFAULT_CLAIMS_CALLABLE: ClaimsCallableType = lambda: dict()
 _DEFAULT_RAISE_ON_INVALID_CLAIM: bool = True
 _DEFAULT_RAISE_ON_INVALID_CLAIMS_TYPE: bool = True
@@ -48,7 +50,7 @@ _DEFAULT_SKIPPED_JSON_SCHEMA: dict = {
                 "oneOf": [
                     {
                         "type": "string",
-                        "pattern": f"^(?i:{"|".join((*_DEFAULT_ALL_HTTP_METHODS, *_DEFAULT_ANY_HTTP_METHODS))})$",
+                        "pattern": f"(?i:(^({_DEFAULT_ALL_HTTP_METHODS_REGEX_GROUP})$))",
                     },
                     { 
                         "type": "null",
@@ -67,15 +69,15 @@ _DEFAULT_SECURED_JSON_SCHEMA: dict = {
     "type": "object",
     "minProperties": 1,
     "patternProperties": {
-        "^(.+)$": {
+        "(^(.+)$)": {
             "type": "object",
             "minProperties": 1,
             "patternProperties": {
-                f"^(?i:{"|".join((*_DEFAULT_ALL_HTTP_METHODS, *_DEFAULT_ANY_HTTP_METHODS))})$": {
+                f"(?i:(^({_DEFAULT_ALL_HTTP_METHODS_REGEX_GROUP})$))": {
                     "type": "object",
                     "minProperties": 1,
                     "patternProperties": {
-                        "^(.+)$": {
+                        "(^(.+)$)": {
                             "type": "object",
                             "minProperties": 1,
                             "properties": {

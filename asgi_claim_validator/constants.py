@@ -59,7 +59,7 @@ _DEFAULT_SECURED_JSON_SCHEMA: dict = {
             "type": "object",
             "minProperties": 1,
             "patternProperties": {
-                f"^(?i:DELETE|GET|HEAD|OPTIONS|PATCH|POST|PUT|{_DEFAULT_ANY_HTTP_METHODS})$": {
+                f"^(?i:{"|".join(_DEFAULT_ALL_HTTP_METHODS)}|{_DEFAULT_ANY_HTTP_METHODS})$": {
                     "type": "object",
                     "minProperties": 1,
                     "patternProperties": {

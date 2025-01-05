@@ -1,7 +1,17 @@
 from asgi_claim_validator.types import SecuredType, SkippedType, ClaimsCallableType
 
 _DEFAULT_ANY_HTTP_METHODS: str = "*"
-_DEFAULT_ALL_HTTP_METHODS: list[str] = ["CONNECT", "DELETE", "GET", "HEAD", "OPTIONS", "PATCH", "POST", "PUT", "TRACE",]
+_DEFAULT_ALL_HTTP_METHODS: list[str] = [
+    "CONNECT", 
+    "DELETE", 
+    "GET", 
+    "HEAD", 
+    "OPTIONS", 
+    "PATCH", 
+    "POST", 
+    "PUT", 
+    "TRACE",
+]
 _DEFAULT_CLAIMS_CALLABLE: ClaimsCallableType = lambda: dict()
 _DEFAULT_RAISE_ON_INVALID_CLAIM: bool = True
 _DEFAULT_RAISE_ON_INVALID_CLAIMS_TYPE: bool = True
@@ -19,7 +29,7 @@ _DEFAULT_SECURED: SecuredType = {
             },
         },
     },
-},
+}
 _DEFAULT_SKIPPED: SkippedType = {
     "^$": [
         f"{_DEFAULT_ANY_HTTP_METHODS}",
@@ -49,7 +59,7 @@ _DEFAULT_SKIPPED_JSON_SCHEMA: dict = {
     },
     "additionalProperties": False,
     "unevaluatedProperties": False,
-},
+}
 _DEFAULT_SECURED_JSON_SCHEMA: dict = {
     "$schema": "https://json-schema.org/draft/2020-12/schema",
     "title": "Secured JSON Schema",
@@ -117,4 +127,4 @@ _DEFAULT_SECURED_JSON_SCHEMA: dict = {
     },
     "additionalProperties": False,
     "unevaluatedProperties": False,
-},
+}

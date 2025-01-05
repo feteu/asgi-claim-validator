@@ -183,6 +183,7 @@ class ClaimValidatorMiddleware:
                     raise
 
         await self.app(scope, receive, send)
+        return
 
     @staticmethod
     def _search_patterns_in_string(s: str, patterns: list[re.Pattern]) -> list[re.Pattern]:

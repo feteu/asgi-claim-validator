@@ -17,7 +17,11 @@ from asgi_claim_validator.constants import (
     _DEFAULT_SECURED,
     _DEFAULT_SKIPPED,
 )
-from asgi_claim_validator.decorators import validate_claims_callable
+from asgi_claim_validator.decorators import (
+    validate_claims_callable,
+    validate_secured,
+    validate_skipped,
+)
 from asgi_claim_validator.exceptions import (
     InvalidClaimsTypeException,
     InvalidClaimValueException,
@@ -73,6 +77,8 @@ class ClaimValidatorMiddleware:
     skipped: SkippedType = field(default_factory=lambda: _DEFAULT_SKIPPED)
   
     @validate_claims_callable()
+    @validate_secured()
+    @validate_skipped()
     def __post_init__(self) -> None:
         """
         Post-initialization method to compile regular expressions for secured and skipped paths.

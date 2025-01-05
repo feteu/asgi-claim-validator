@@ -47,12 +47,14 @@ packages = [
 
 [tool.poetry.dependencies]
 python = ">=3.11,<4.0"
-starlette = "^0.45.2"
 joserfc = "^1.0.1"
+jsonschema = "^4.23.0"
+starlette = "^0.45.2"
 
 [tool.poetry.group.dev.dependencies]
 connexion = {version="*", extras=["swagger-ui"]}
 httpx = "*"
+jsonschema = "*"
 pytest = "*"
 starlette = "*"
 uvicorn = "*"

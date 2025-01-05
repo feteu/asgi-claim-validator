@@ -254,3 +254,59 @@ class InvalidClaimsConfigurationException(ClaimValidatorException):
 
     def __str__(self) -> str:
         return f"Invalid claims callable: {self.detail}"
+
+class InvalidSecuredConfigurationException(ClaimValidatorException):
+    """Exception raised when the secured configuration is invalid.
+
+    This exception is used to indicate that the secured dictionary provided
+    is not correctly formatted or contains invalid values. It is raised during
+    the initialization of the ClaimValidatorMiddleware.
+
+    Attributes:
+        detail (str): A detailed error message.
+        status (int): The HTTP status code.
+        title (str): A short HTTP status message.
+    """
+    description: str = (
+        "The secured configuration is invalid. Ensure that the secured dictionary "
+        "is correctly formatted and contains valid values."
+    )
+    status: int = 500
+    title: str = "Internal Server Error"
+
+    def __init__(self, detail: str = description, status: int = status, title: str = title) -> None:
+        self.detail: str = detail
+        self.status: int = status
+        self.title: str = title
+        super().__init__(self.detail, self.status, self.title)
+
+    def __str__(self) -> str:
+        return f"Invalid secured configuration: {self.detail}"
+
+class InvalidSkippedConfigurationException(ClaimValidatorException):
+    """Exception raised when the skipped configuration is invalid.
+
+    This exception is used to indicate that the skipped dictionary provided
+    is not correctly formatted or contains invalid values. It is raised during
+    the initialization of the ClaimValidatorMiddleware.
+
+    Attributes:
+        detail (str): A detailed error message.
+        status (int): The HTTP status code.
+        title (str): A short HTTP status message.
+    """
+    description: str = (
+        "The skipped configuration is invalid. Ensure that the skipped dictionary "
+        "is correctly formatted and contains valid values."
+    )
+    status: int = 500
+    title: str = "Internal Server Error"
+
+    def __init__(self, detail: str = description, status: int = status, title: str = title) -> None:
+        self.detail: str = detail
+        self.status: int = status
+        self.title: str = title
+        super().__init__(self.detail, self.status, self.title)
+
+    def __str__(self) -> str:
+        return f"Invalid skipped configuration: {self.detail}"

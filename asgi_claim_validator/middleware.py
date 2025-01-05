@@ -5,7 +5,7 @@ from joserfc.errors import InvalidClaimError, MissingClaimError
 from joserfc.jwt import JWTClaimsRegistry
 from starlette.types import ASGIApp, Message, Receive, Scope, Send
 from asgi_claim_validator.constants import (
-    _DEFAULT_ANY_HTTP_METHOD,
+    _DEFAULT_ANY_HTTP_METHODS,
     _DEFAULT_CLAIMS_CALLABLE,
     _DEFAULT_RAISE_ON_INVALID_CLAIM,
     _DEFAULT_RAISE_ON_INVALID_CLAIMS_TYPE,
@@ -153,7 +153,7 @@ class ClaimValidatorMiddleware:
         # are dictionaries of methods and their corresponding claims that match the current HTTP method.
         filtered_patterns = {
             fp_path: {
-                fp_method: fp_claims for fp_method, fp_claims in fp_methods.items() if fp_method in (method, _DEFAULT_ANY_HTTP_METHOD)
+                fp_method: fp_claims for fp_method, fp_claims in fp_methods.items() if fp_method in (method, _DEFAULT_ANY_HTTP_METHODS)
             } for fp_path, fp_methods in filtered_patterns.items()
         }
 

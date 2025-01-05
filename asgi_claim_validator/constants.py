@@ -1,6 +1,7 @@
 from asgi_claim_validator.types import SecuredType, SkippedType, ClaimsCallableType
 
-_DEFAULT_ANY_HTTP_METHOD: str = "*"
+_DEFAULT_ANY_HTTP_METHODS: str = "*"
+_DEFAULT_ALL_HTTP_METHODS: list[str] = ["CONNECT", "DELETE", "GET", "HEAD", "OPTIONS", "PATCH", "POST", "PUT", "TRACE"]
 _DEFAULT_CLAIMS_CALLABLE: ClaimsCallableType = lambda: dict()
 _DEFAULT_RAISE_ON_INVALID_CLAIM: bool = True
 _DEFAULT_RAISE_ON_INVALID_CLAIMS_TYPE: bool = True
@@ -9,8 +10,21 @@ _DEFAULT_RAISE_ON_UNAUTHENTICATED: bool = True
 _DEFAULT_RAISE_ON_UNSPECIFIED_METHOD: bool = True
 _DEFAULT_RAISE_ON_UNSPECIFIED_PATH: bool = True
 _DEFAULT_RE_IGNORECASE: bool = False
-_DEFAULT_SECURED: SecuredType = dict()
-_DEFAULT_SKIPPED: SkippedType = dict()
+_DEFAULT_SECURED: SecuredType = {
+    "^.+$": {
+        f"{_DEFAULT_ANY_HTTP_METHODS}": {
+            "sub": {
+                "essential": False, 
+                "allow_blank": False,
+            },
+        },
+    },
+},
+_DEFAULT_SKIPPED: SkippedType = {
+    "^.+$": [
+        "TRACE",
+    ],
+}
 _DEFAULT_SKIPPED_JSON_SCHEMA: dict = {
     "title": "Skipped JSON Schema",
     "description": "Schema for validating skipped configuration",
@@ -23,16 +37,18 @@ _DEFAULT_SKIPPED_JSON_SCHEMA: dict = {
                 "oneOf": [
                     {
                         "type": "string",
-                        "pattern": "^(?i:DELETE|GET|HEAD|OPTIONS|PATCH|POST|PUT|{_DEFAULT_ANY_HTTP_METHOD})$"
+                        "pattern": f"^(?i:{"|".join(_DEFAULT_ALL_HTTP_METHODS)}|{_DEFAULT_ANY_HTTP_METHODS})$",
                     },
-                    { "type": "null" }
-                ]
-            }
-        }
+                    { 
+                        "type": "null",
+                    },
+                ],
+            },
+        },
     },
     "additionalProperties": False,
-    "unevaluatedProperties": False
-}
+    "unevaluatedProperties": False,
+},
 _DEFAULT_SECURED_JSON_SCHEMA: dict = {
     "title": "Secured JSON Schema",
     "description": "Schema for validating secured configuration",
@@ -43,7 +59,7 @@ _DEFAULT_SECURED_JSON_SCHEMA: dict = {
             "type": "object",
             "minProperties": 1,
             "patternProperties": {
-                f"^(?i:DELETE|GET|HEAD|OPTIONS|PATCH|POST|PUT|{_DEFAULT_ANY_HTTP_METHOD})$": {
+                f"^(?i:DELETE|GET|HEAD|OPTIONS|PATCH|POST|PUT|{_DEFAULT_ANY_HTTP_METHODS})$": {
                     "type": "object",
                     "minProperties": 1,
                     "patternProperties": {
@@ -53,39 +69,50 @@ _DEFAULT_SECURED_JSON_SCHEMA: dict = {
                             "properties": {
                                 "essential": {
                                     "oneOf": [
-                                        {"type": "boolean"}
-                                    ]
+                                        {
+                                            "type": "boolean",
+                                        },
+                                    ],
                                 },
                                 "allow_blank": {
                                     "oneOf": [
-                                        {"type": "boolean"},
-                                        {"type": "null"}
-                                    ]
+                                        {
+                                            "type": "boolean",
+                                        },
+                                        {
+                                            "type": "null",
+                                        },
+                                    ],
                                 },
                                 "values": {
                                     "type": "array",
                                     "items": {
                                         "oneOf": [
-                                            {"type": "boolean"},
-                                            {"type": "integer"},
-                                            {"type": "string"}
-                                        ]
-                                    }
-                                }
+                                            {
+                                                "type": "boolean",
+                                            },
+                                            {
+                                                "type": "integer",
+                                            },
+                                            {
+                                                "type": "string",
+                                            },
+                                        ],
+                                    },
+                                },
                             },
-                            "required": ["essential", "values"],
                             "additionalProperties": False,
-                            "unevaluatedProperties": False
-                        }
+                            "unevaluatedProperties": False,
+                        },
                     },
                     "additionalProperties": False,
-                    "unevaluatedProperties": False
-                }
+                    "unevaluatedProperties": False,
+                },
             },
             "additionalProperties": False,
-            "unevaluatedProperties": False
-        }
+            "unevaluatedProperties": False,
+        },
     },
     "additionalProperties": False,
-    "unevaluatedProperties": False
-}
+    "unevaluatedProperties": False,
+},

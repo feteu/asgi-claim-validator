@@ -29,7 +29,7 @@ def validate_secured() -> Callable:
         def wrapper(*args, **kwargs) -> Callable:
             secured = kwargs.get('secured')
             try:
-                validate.schema(secured, _DEFAULT_SECURED_JSON_SCHEMA)
+                validate(instance=secured, schema=_DEFAULT_SECURED_JSON_SCHEMA)
             except Exception as e:
                 log.error(e)
                 raise InvalidSecuredConfigurationException()
@@ -42,7 +42,7 @@ def validate_skipped() -> Callable:
         def wrapper(*args, **kwargs) -> Callable:
             skipped = kwargs.get('skipped')
             try:
-                validate.schema(skipped, _DEFAULT_SKIPPED_JSON_SCHEMA)
+                validate(instance=skipped, schema=_DEFAULT_SKIPPED_JSON_SCHEMA)
             except Exception as e:
                 log.error(e)
                 raise InvalidSkippedConfigurationException()

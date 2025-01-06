@@ -35,7 +35,7 @@ config = {
             },
         } 
     },
-    "claims": claims_mock,
+    "claims_callable": claims_mock,
 }
 
 app = Starlette()

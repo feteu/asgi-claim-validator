@@ -28,7 +28,7 @@ def validate_claims_callable() -> Callable:
 def validate_secured() -> Callable:
     def decorator(func) -> Callable:
         def wrapper(self, *args, **kwargs) -> Callable:
-            secured = getattr(self, 'secured1', None)
+            secured = getattr(self, 'secured', None)
             try:
                 validate(instance=secured, schema=_DEFAULT_SECURED_JSON_SCHEMA)
             except (SchemaError, ValidationError) as e:

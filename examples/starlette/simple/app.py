@@ -40,9 +40,9 @@ config = {
 
 app = Starlette()
 
-@app.route("/api/1")
-async def root_(request) -> JSONResponse:
-    return JSONResponse({"message": "Hello, world!"})
+@app.route("/api/1/blocked")
+async def api_1_blocked(request) -> JSONResponse:
+    return JSONResponse({"status": "blocked"})
 
 @app.route("/api/1/secured")
 async def api_1_secured(request) -> JSONResponse:

@@ -16,9 +16,7 @@ claims_mock = lambda: {
 }
 
 config = {
-    "skipped": {
-        "^/api/1/skipped$": ["get"],
-    },
+    "claims_callable": claims_mock,
     "secured": {
         "^/api/1/secured$": {
             "get": {
@@ -33,9 +31,11 @@ config = {
                     "values": ["https://example.com"],
                 },
             },
-        } 
+        },
     },
-    "claims_callable": claims_mock,
+    "skipped": {
+        "^/api/1/skipped$": ["get"],
+    },
 }
 
 app = Starlette()

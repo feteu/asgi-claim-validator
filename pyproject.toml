@@ -56,6 +56,7 @@ connexion = {version="*", extras=["swagger-ui"]}
 httpx = "*"
 jsonschema = "*"
 pytest = "*"
+pytest-asyncio = "*"
 starlette = "*"
 uvicorn = "*"
 

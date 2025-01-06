@@ -31,9 +31,9 @@ async def skipped_endpoint(request: Request) -> JSONResponse:
 @pytest.fixture
 def app(claims_callable: Callable) -> Starlette:
     routes = [
-        Route("/blocked", blocked_endpoint, methods=["GET"]),
-        Route("/secured", secured_endpoint, methods=["GET"]),
-        Route("/skipped", skipped_endpoint, methods=["GET"]),
+        Route("/blocked", blocked_endpoint, methods=["GET", "HEAD"]),
+        Route("/secured", secured_endpoint, methods=["GET", "HEAD"]),
+        Route("/skipped", skipped_endpoint, methods=["GET", "HEAD"]),
     ]
     app = Starlette(routes=routes)
     app.add_middleware(

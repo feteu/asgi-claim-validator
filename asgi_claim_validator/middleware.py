@@ -133,11 +133,11 @@ class ClaimValidatorMiddleware:
                 await self.app(scope, receive, send)
                 return
 
-        if self.raise_on_unauthenticated and not claims:
-            raise UnauthenticatedRequestException(path=path, method=method)
-
         if self.raise_on_invalid_claims_type and not isinstance(claims, dict):
             raise InvalidClaimsTypeException(path=path, method=method, type_received=type(claims), type_expected=dict)
+
+        if self.raise_on_unauthenticated and not claims:
+            raise UnauthenticatedRequestException(path=path, method=method)
 
         # This dictionary comprehension filters the secured_compiled dictionary to include only those patterns
         # that match the current URL path. It creates a new dictionary where the keys are the patterns that match the URL path.

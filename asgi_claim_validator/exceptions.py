@@ -5,7 +5,7 @@ class ClaimValidatorException(Exception):
     It provides a common interface for handling errors related to claim validation.
 
     Attributes:
-        description (str): A brief description of the error.
+        detail (str): A detailed error message.
         status (int): The HTTP status code.
         title (str): A short HTTP status message.
     """

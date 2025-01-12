@@ -1,7 +1,7 @@
-import logging
 from collections.abc import Callable
 from jsonschema import validate
 from jsonschema.exceptions import SchemaError, ValidationError
+from logging import getLogger
 from asgi_claim_validator.constants import (
     _DEFAULT_CLAIMS_CALLABLE, 
     _DEFAULT_SECURED_JSON_SCHEMA,
@@ -13,7 +13,7 @@ from asgi_claim_validator.exceptions import (
     InvalidSkippedConfigurationException,
 )
 
-log = logging.getLogger(__name__)
+log = getLogger(__name__)
 
 def validate_claims_callable() -> Callable:
     def decorator(func) -> Callable:

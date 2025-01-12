@@ -1,9 +1,9 @@
-import logging
-import re
 from dataclasses import dataclass, field
 from joserfc.errors import InvalidClaimError, MissingClaimError
 from joserfc.jwt import JWTClaimsRegistry
-from starlette.types import ASGIApp, Message, Receive, Scope, Send
+from logging import getLogger
+from re import compile, error, IGNORECASE, NOFLAG, Pattern, RegexFlag
+from starlette.types import ASGIApp, Receive, Scope, Send
 from asgi_claim_validator.constants import (
     _DEFAULT_ANY_HTTP_METHODS,
     _DEFAULT_CLAIMS_CALLABLE,
@@ -38,7 +38,7 @@ from asgi_claim_validator.types import (
     SkippedType,
 )
 
-log = logging.getLogger(__name__)
+log = getLogger(__name__)
 
 @dataclass
 class ClaimValidatorMiddleware:
@@ -54,7 +54,7 @@ class ClaimValidatorMiddleware:
         raise_on_unauthenticated (bool): Flag to raise an exception on unauthenticated requests.
         raise_on_unspecified_method (bool): Flag to raise an exception on unspecified methods.
         raise_on_unspecified_path (bool): Flag to raise an exception on unspecified paths.
-        re_flags (re.RegexFlag): Regular expression flags.
+        re_flags (RegexFlag): Regular expression flags.
         re_ignorecase (bool): Flag to ignore case in regular expressions.
         secured_compiled (SecuredCompiledType): Compiled secured paths and methods.
         secured (SecuredType): Secured paths and methods.
@@ -69,7 +69,7 @@ class ClaimValidatorMiddleware:
     raise_on_unauthenticated: bool = field(default=_DEFAULT_RAISE_ON_UNAUTHENTICATED)
     raise_on_unspecified_method: bool = field(default=_DEFAULT_RAISE_ON_UNSPECIFIED_METHOD)
     raise_on_unspecified_path: bool = field(default=_DEFAULT_RAISE_ON_UNSPECIFIED_PATH)
-    re_flags: re.RegexFlag = field(default=re.NOFLAG, init=False)
+    re_flags: RegexFlag = field(default=NOFLAG, init=False)
     re_ignorecase: bool = field(default=_DEFAULT_RE_IGNORECASE)
     secured_compiled: SecuredCompiledType = field(default_factory=dict, init=False)
     secured: SecuredType = field(default_factory=lambda: _DEFAULT_SECURED)
@@ -84,22 +84,22 @@ class ClaimValidatorMiddleware:
         Post-initialization method to compile regular expressions for secured and skipped paths.
         """
         try:
-            self.re_flags = re.IGNORECASE if self.re_ignorecase else re.NOFLAG
+            self.re_flags = IGNORECASE if self.re_ignorecase else NOFLAG
             # This code compiles regular expressions for each path in self.secured and associates them with a 
             # dictionary of HTTP methods in uppercase and their corresponding claims.
             self.secured_compiled = {
-                re.compile(path, flags=self.re_flags): { 
+                compile(path, flags=self.re_flags): { 
                     method.upper(): claims for method, claims in methods.items()
                 } for path, methods in self.secured.items()
             }
             # This code compiles regular expressions for each path in self.skipped and associates them with the 
             # corresponding HTTP methods in uppercase.
             self.skipped_compiled = {
-                re.compile(path, flags=self.re_flags): set(
+                compile(path, flags=self.re_flags): set(
                     method.upper() for method in methods
                 ) for path, methods in self.skipped.items()
             }
-        except re.error as e:
+        except error as e:
             raise ValueError(f"Invalid regular expression in secured or skipped paths: {e}")
 
     async def __call__(self, scope: Scope, receive: Receive, send: Send) -> None:
@@ -186,7 +186,7 @@ class ClaimValidatorMiddleware:
         return
 
     @staticmethod
-    def _search_patterns_in_string(s: str, patterns: list[re.Pattern]) -> list[re.Pattern]:
+    def _search_patterns_in_string(s: str, patterns: list[Pattern]) -> list[Pattern]:
         """
         Searches for patterns in a given string and returns the patterns that match.
 
@@ -195,9 +195,9 @@ class ClaimValidatorMiddleware:
 
         Args:
             s (str): The string to search within.
-            patterns (list[re.Pattern]): A list of compiled regular expression patterns to search for.
+            patterns (list[Pattern]): A list of compiled regular expression patterns to search for.
 
         Returns:
-            list[re.Pattern]: A list of patterns that match the string.
+            list[Pattern]: A list of patterns that match the string.
         """
         return [p for p in patterns if p.search(s)]

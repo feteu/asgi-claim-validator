@@ -11,7 +11,7 @@ from time import time
 @pytest.fixture
 def claims_callable() -> Callable:
     """Fixture for providing mock JWT claims callable."""
-    return lambda: {
+    return lambda _: {
         "sub": "admin",
         "iss": "https://example.com",
         "aud": "https://example.com",

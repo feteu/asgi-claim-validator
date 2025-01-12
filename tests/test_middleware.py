@@ -32,7 +32,7 @@ async def test_blocked_endpoint(app: Starlette) -> None:
         assert response.json() == {"error": "Unauthorized"}
 
 async def test_invalid_claims_type_endpoint(app: Starlette) -> None:
-    app.user_middleware[0].kwargs["claims_callable"] = lambda: "not_a_dict"
+    app.user_middleware[0].kwargs["claims_callable"] = lambda _: "not_a_dict"
     transport = ASGITransport(app=app, raise_app_exceptions=False)
     async with AsyncClient(transport=transport, base_url="http://testserver") as client:
         response = await client.get("/secured")
@@ -40,14 +40,14 @@ async def test_invalid_claims_type_endpoint(app: Starlette) -> None:
         assert response.json() == {"error": "Bad Request"}
 
 async def test_invalid_claims_type_exception(app: Starlette) -> None:
-    app.user_middleware[0].kwargs["claims_callable"] = lambda: "not_a_dict"
+    app.user_middleware[0].kwargs["claims_callable"] = lambda _: "not_a_dict"
     transport = ASGITransport(app=app, raise_app_exceptions=True)
     async with AsyncClient(transport=transport, base_url="http://testserver") as client:
         with pytest.raises(InvalidClaimsTypeException):
             await client.get("/secured")
 
 async def test_unauthenticated_endpoint(app: Starlette) -> None:
-    app.user_middleware[0].kwargs["claims_callable"] = lambda: {}
+    app.user_middleware[0].kwargs["claims_callable"] = lambda _: {}
     transport = ASGITransport(app=app, raise_app_exceptions=False)
     async with AsyncClient(transport=transport, base_url="http://testserver") as client:
         response = await client.get("/secured")
@@ -55,7 +55,7 @@ async def test_unauthenticated_endpoint(app: Starlette) -> None:
         assert response.json() == {"error": "Unauthorized"}
 
 async def test_unauthenticated_exception(app: Starlette) -> None:
-    app.user_middleware[0].kwargs["claims_callable"] = lambda: {}
+    app.user_middleware[0].kwargs["claims_callable"] = lambda _: {}
     transport = ASGITransport(app=app, raise_app_exceptions=True)
     async with AsyncClient(transport=transport, base_url="http://testserver") as client:
         with pytest.raises(UnauthenticatedRequestException):
@@ -88,7 +88,7 @@ async def test_unspecified_method_authentication_exception(app: Starlette) -> No
             await client.delete("/secured")
 
 async def test_missing_essential_claim_endpoint(app: Starlette) -> None:
-    app.user_middleware[0].kwargs["claims_callable"] = lambda: {
+    app.user_middleware[0].kwargs["claims_callable"] = lambda _: {
         "sub": "admin",
     }
     transport = ASGITransport(app=app, raise_app_exceptions=False)
@@ -98,7 +98,7 @@ async def test_missing_essential_claim_endpoint(app: Starlette) -> None:
         assert response.json() == {"error": "Forbidden"}
  
 async def test_missing_essential_claim_exception(app: Starlette) -> None:
-    app.user_middleware[0].kwargs["claims_callable"] = lambda: {
+    app.user_middleware[0].kwargs["claims_callable"] = lambda _: {
         "sub": "admin",
     }
     transport = ASGITransport(app=app, raise_app_exceptions=True)
@@ -107,7 +107,7 @@ async def test_missing_essential_claim_exception(app: Starlette) -> None:
             await client.get("/secured")
 
 async def test_invalid_claim_value_endpoint(app: Starlette) -> None:
-    app.user_middleware[0].kwargs["claims_callable"] = lambda: {
+    app.user_middleware[0].kwargs["claims_callable"] = lambda _: {
         "sub": "admin",
         "iss": "https://wrong-example.com",
     }
@@ -118,7 +118,7 @@ async def test_invalid_claim_value_endpoint(app: Starlette) -> None:
         assert response.json() == {"error": "Forbidden"}
  
 async def test_invalid_claim_value_exception(app: Starlette) -> None:
-    app.user_middleware[0].kwargs["claims_callable"] = lambda: {
+    app.user_middleware[0].kwargs["claims_callable"] = lambda _: {
         "sub": "admin",
         "iss": "https://wrong-example.com",
     }

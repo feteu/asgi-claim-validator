@@ -47,7 +47,7 @@ class ClaimValidatorMiddleware:
 
     Attributes:
         app (ASGIApp): The ASGI application.
-        claims_callable (ClaimsCallableType): A callable that returns the claims.
+        claims_callable (ClaimsCallableType): A callable that receives the current call scope and returns the claims as a dict.
         raise_on_invalid_claim (bool): Flag to raise an exception on invalid claims.
         raise_on_invalid_claims_type (bool): Flag to raise an exception on invalid claims type.
         raise_on_missing_claim (bool): Flag to raise an exception on missing claims.
@@ -138,7 +138,7 @@ class ClaimValidatorMiddleware:
 
         method = scope["method"].upper()
         path = scope["path"]
-        claims = self.claims_callable()
+        claims = self.claims_callable(scope)
 
         # Check if the request path matches any skipped path patterns and if the request method is allowed for that path.
         # If both conditions are met, forward the request to the next middleware or application.

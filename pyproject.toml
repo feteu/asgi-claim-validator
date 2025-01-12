@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "asgi-claim-validator"
-version = "0.0.1"
+version = "1.0.0"
 description = "A focused ASGI middleware for validating additional claims within JWT tokens to enhance token-based workflows."
 authors = ["Fabio Greco <fabio.greco.github@gmail.com>"]
 maintainers = ["Fabio Greco <fabio.greco.github@gmail.com>"]
@@ -11,14 +11,14 @@ repository = "https://github.com/feteu/asgi-claim-validator"
 keywords = [
     "asgi",
     "async",
+    "claims",
     "connexion",
     "fastapi",
+    "jwt",
     "middleware",
     "request-duration",
     "starlette",
-    "jwt",
     "validator",
-    "claims",
 ]
 classifiers = [
     'Development Status :: 5 - Production/Stable',

@@ -272,13 +272,13 @@ files = [
 
 [[package]]
 name = "connexion"
-version = "3.1.0"
+version = "3.2.0"
 description = "Connexion - API first applications with OpenAPI/Swagger"
 optional = false
 python-versions = "<4.0,>=3.8"
 files = [
-    {file = "connexion-3.1.0-py3-none-any.whl", hash = "sha256:e92b6d0412eb54b3b69f2516b93d982a06b0e23f6d5c1ab94257c55d365f63ce"},
-    {file = "connexion-3.1.0.tar.gz", hash = "sha256:66a44580991f53955b6e409a84fa9fa65c7ca4db52dc217b49cd35c201066083"},
+    {file = "connexion-3.2.0-py3-none-any.whl", hash = "sha256:905950337d40f526fb4f2eed3b15fc15d8c367625921ab9442954a025d3e03b3"},
+    {file = "connexion-3.2.0.tar.gz", hash = "sha256:0715d4a0393437aa2a48c144756360f9b5292635a05fd15c38cbbaf04ef5acb9"},
 ]
 
 [package.dependencies]
@@ -287,7 +287,7 @@ httpx = ">=0.23"
 inflection = ">=0.3.1"
 Jinja2 = ">=3.0.0"
 jsonschema = ">=4.17.3"
-python-multipart = ">=0.0.5"
+python-multipart = ">=0.0.15"
 PyYAML = ">=5.1"
 requests = ">=2.27"
 starlette = ">=0.35"
@@ -640,13 +640,13 @@ dev = ["argcomplete", "attrs (>=19.2)", "hypothesis (>=3.56)", "mock", "pygments
 
 [[package]]
 name = "pytest-asyncio"
-version = "0.25.1"
+version = "0.25.2"
 description = "Pytest support for asyncio"
 optional = false
 python-versions = ">=3.9"
 files = [
-    {file = "pytest_asyncio-0.25.1-py3-none-any.whl", hash = "sha256:c84878849ec63ff2ca509423616e071ef9cd8cc93c053aa33b5b8fb70a990671"},
-    {file = "pytest_asyncio-0.25.1.tar.gz", hash = "sha256:79be8a72384b0c917677e00daa711e07db15259f4d23203c59012bcd989d4aee"},
+    {file = "pytest_asyncio-0.25.2-py3-none-any.whl", hash = "sha256:0d0bb693f7b99da304a0634afc0a4b19e49d5e0de2d670f38dc4bfa5727c5075"},
+    {file = "pytest_asyncio-0.25.2.tar.gz", hash = "sha256:3f8ef9a98f45948ea91a0ed3dc4268b5326c0e7bce73892acc654df4262ad45f"},
 ]
 
 [package.dependencies]

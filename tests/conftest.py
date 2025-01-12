@@ -1,12 +1,12 @@
 import pytest
-import time
+from asgi_claim_validator.exceptions import ClaimValidatorException
+from asgi_claim_validator.middleware import ClaimValidatorMiddleware
 from collections.abc import Callable
 from starlette.applications import Starlette
 from starlette.requests import Request
 from starlette.responses import JSONResponse
 from starlette.routing import Route
-from asgi_claim_validator.exceptions import ClaimValidatorException
-from asgi_claim_validator.middleware import ClaimValidatorMiddleware
+from time import time
 
 @pytest.fixture
 def claims_callable() -> Callable:
@@ -15,9 +15,9 @@ def claims_callable() -> Callable:
         "sub": "admin",
         "iss": "https://example.com",
         "aud": "https://example.com",
-        "exp": int(time.time() + 3600),
-        "iat": int(time.time()),
-        "nbf": int(time.time()),
+        "exp": int(time() + 3600),
+        "iat": int(time()),
+        "nbf": int(time()),
     }
 
 async def blocked_endpoint(request: Request) -> JSONResponse:

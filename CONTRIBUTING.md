@@ -1,6 +1,6 @@
 # Contributing to ASGI Claim Validator
 
-Thanks for thinking about contributing to ASGI Request Duration! I welcome your help and can't wait to see what you'll bring to the table.
+Thanks for thinking about contributing to ASGI Claim Validator! I welcome your help and can't wait to see what you'll bring to the table.
 
 ## How to Contribute
 

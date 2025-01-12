@@ -1,12 +1,12 @@
 import pytest
 import time
 from collections.abc import Callable
-from asgi_claim_validator.exceptions import ClaimValidatorException
-from asgi_claim_validator.middleware import ClaimValidatorMiddleware
 from starlette.applications import Starlette
 from starlette.requests import Request
 from starlette.responses import JSONResponse
 from starlette.routing import Route
+from asgi_claim_validator.exceptions import ClaimValidatorException
+from asgi_claim_validator.middleware import ClaimValidatorMiddleware
 
 @pytest.fixture
 def claims_callable() -> Callable:

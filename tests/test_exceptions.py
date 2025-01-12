@@ -1,13 +1,13 @@
 import pytest
 from asgi_claim_validator.exceptions import (
     ClaimValidatorException,
+    InvalidClaimsConfigurationException,
+    InvalidClaimsTypeException,
+    InvalidClaimValueException,
+    MissingEssentialClaimException,
+    UnauthenticatedRequestException,
     UnspecifiedMethodAuthenticationException,
     UnspecifiedPathAuthenticationException,
-    UnauthenticatedRequestException,
-    MissingEssentialClaimException,
-    InvalidClaimValueException,
-    InvalidClaimsTypeException,
-    InvalidClaimsConfigurationException,
 )
 
 def test_claim_validator_exception() -> None:

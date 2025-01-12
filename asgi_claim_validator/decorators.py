@@ -16,7 +16,13 @@ from asgi_claim_validator.exceptions import (
 log = getLogger(__name__)
 
 def validate_claims_callable() -> Callable:
-    def decorator(func) -> Callable:
+    """
+    Decorator to validate the claims_callable attribute of a class.
+
+    Raises:
+        InvalidClaimsConfigurationException: If claims_callable is not a callable.
+    """
+    def decorator(func: Callable) -> Callable:
         def wrapper(self, *args, **kwargs) -> Callable:
             claims = getattr(self, 'claims_callable', _DEFAULT_CLAIMS_CALLABLE)
             if not isinstance(claims, Callable):
@@ -26,7 +32,13 @@ def validate_claims_callable() -> Callable:
     return decorator
 
 def validate_secured() -> Callable:
-    def decorator(func) -> Callable:
+    """
+    Decorator to validate the secured attribute of a class against a JSON schema.
+
+    Raises:
+        InvalidSecuredConfigurationException: If the secured attribute does not conform to the schema.
+    """
+    def decorator(func: Callable) -> Callable:
         def wrapper(self, *args, **kwargs) -> Callable:
             secured = getattr(self, 'secured', None)
             try:
@@ -39,7 +51,13 @@ def validate_secured() -> Callable:
     return decorator
 
 def validate_skipped() -> Callable:
-    def decorator(func) -> Callable:
+    """
+    Decorator to validate the skipped attribute of a class against a JSON schema.
+
+    Raises:
+        InvalidSkippedConfigurationException: If the skipped attribute does not conform to the schema.
+    """
+    def decorator(func: Callable) -> Callable:
         def wrapper(self, *args, **kwargs) -> Callable:
             skipped = getattr(self, 'skipped', None)
             try:

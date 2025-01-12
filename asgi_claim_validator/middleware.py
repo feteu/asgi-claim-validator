@@ -1,7 +1,7 @@
 from dataclasses import dataclass, field
 from joserfc.errors import InvalidClaimError, MissingClaimError
 from joserfc.jwt import JWTClaimsRegistry
-from logging import getLogger
+from logging import DEBUG, getLogger
 from re import compile, error, IGNORECASE, NOFLAG, Pattern, RegexFlag
 from starlette.types import ASGIApp, Receive, Scope, Send
 from asgi_claim_validator.constants import (
@@ -164,7 +164,7 @@ class ClaimValidatorMiddleware:
         # and logs any errors encountered during the validation process.
         for fp_path, fp_methods in filtered_patterns.items():
             for fp_method, fp_claims in fp_methods.items():
-                if log.isEnabledFor(logging.DEBUG):
+                if log.isEnabledFor(DEBUG):
                     log.debug(f"path: {path} | method: {method} | claims: {claims}")
                     log.debug(f"fp_path: {fp_path} | fp_method: {fp_method} | fp_claims: {fp_claims}")
                 try:

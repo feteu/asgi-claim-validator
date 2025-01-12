@@ -36,28 +36,15 @@ pip install asgi-claim-validator
 
 ### Basic Usage
 
-Here's an example of how to use `asgi-claim-validator` with Starlette:
-
 ```python
+from asgi_claim_validator.middleware import ClaimValidatorMiddleware
 from starlette.applications import Starlette
-from starlette.requests import Request
-from starlette.responses import JSONResponse
-from starlette.routing import Route
-from asgi_claim_validator import ClaimValidatorMiddleware
 
-async def secured_endpoint(request: Request) -> JSONResponse:
-    return JSONResponse({"message": "secured"})
-
-app = Starlette(routes=[
-    Route("/secured", secured_endpoint, methods=["GET"]),
-])
+app = Starlette()
 
 app.add_middleware(
     ClaimValidatorMiddleware,
-    claims_callable=lambda: {
-        "sub": "admin",
-        "iss": "https://example.com",
-    },
+    claims_callable=my_claims_callable,
     secured={
         "^/secured$": {
             "GET": {
@@ -74,32 +61,11 @@ app.add_middleware(
             },
         }
     },
+    skipped={
+        "^/skipped$": ["GET"],
+    },
 )
 ```
-
-## Advanced Usage
-
-### Custom Exception Handlers
-
-Integrate `asgi-claim-validator` with custom exception handlers to provide meaningful error responses. Below are examples for Starlette and Connexion. Refer to the specific framework examples in the [examples](examples) directory for detailed implementation.
-
-### Middleware Configuration
-
-Configure the middleware with the following options:
-
-- **claims_callable**: A callable that returns the JWT claims to be validated.
-- **secured**: A dictionary defining the paths and methods that require claim validation.
-- **skipped**: A dictionary defining the paths and methods to be excluded from claim validation.
-- **raise_on_unspecified_path**: Raise an exception if the path is not specified in the `secured` or `skipped` dictionaries.
-- **raise_on_unspecified_method**: Raise an exception if the method is not specified for a secured path.
-
-### Claim Validation Options
-
-Configure claims with the following options:
-
-- **essential**: Indicates if the claim is essential (default: `False`).
-- **allow_blank**: Indicates if blank values are allowed (default: `True`).
-- **values**: A list of allowed values for the claim.
 
 ## Examples
 

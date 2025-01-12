@@ -82,6 +82,20 @@ class ClaimValidatorMiddleware:
     def __post_init__(self) -> None:
         """
         Post-initialization method to compile regular expressions for secured and skipped paths.
+
+        This method is called after the object is initialized. It compiles the regular expressions
+        for the paths specified in the `secured` and `skipped` attributes, and associates them with
+        their corresponding HTTP methods and claims.
+
+        Attributes:
+            re_flags (int): Regular expression flags, set to IGNORECASE if `re_ignorecase` is True, otherwise NOFLAG.
+            secured_compiled (dict): A dictionary where keys are compiled regular expressions for secured paths,
+                                    and values are dictionaries mapping HTTP methods to their corresponding claims.
+            skipped_compiled (dict): A dictionary where keys are compiled regular expressions for skipped paths,
+                                    and values are sets of HTTP methods in uppercase.
+
+        Raises:
+            ValueError: If there is an invalid regular expression in the `secured` or `skipped` paths.
         """
         try:
             self.re_flags = IGNORECASE if self.re_ignorecase else NOFLAG
@@ -180,7 +194,7 @@ class ClaimValidatorMiddleware:
                         raise InvalidClaimValueException(path=path, method=method, claims=claims)
                 except Exception as e:
                     log.error(f"Unexpected error during claim validation: {e}")
-                    raise
+                    raise e
 
         await self.app(scope, receive, send)
         return

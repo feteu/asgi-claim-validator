@@ -32,7 +32,7 @@ claim_validation_secured = {
         },
     }
 }
-claim_validation_claims_callable = lambda: {
+claim_validation_claims_callable = lambda _: {
     "sub": "admin",
     "iss": "https://example.com",
     "aud": "https://example.com",

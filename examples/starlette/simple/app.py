@@ -10,7 +10,7 @@ from asgi_claim_validator import ClaimValidatorMiddleware, ClaimValidatorExcepti
 JWT_LIFETIME_SECONDS = 3600
 
 def claims_callable() -> Callable:
-    return lambda: {
+    return lambda _: {
         "sub": "admin",
         "iss": "https://example.com",
         "aud": "https://example.com",

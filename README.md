@@ -36,24 +36,29 @@ pip install asgi-claim-validator
 
 ### Basic Usage
 
+Below is an example of how to integrate `ClaimValidatorMiddleware` with a Connexion application. This middleware validates specific claims within JWT tokens for certain endpoints.
+
+> **Note:** the path regex will be automatically escaped.
+
+#### Parameters:
+
+- `claims_callable`: A callable that extracts the token information from the Connexion context. This needs to be specified and is most likely framework dependent.
+- `secured`: A dictionary defining the secured paths and the claims that need to be validated. In this example, the `/secured` path requires the `sub` claim to be `admin` and the `iss` claim to be `https://example.com` for GET requests.
+- `skipped`: A dictionary defining the paths and methods that should be skipped from validation. In this example, the `/skipped` path is skipped for GET requests.
+
 ```python
 from asgi_claim_validator.middleware import ClaimValidatorMiddleware
-from starlette.applications import Starlette
+from connexion import AsyncApp
 
-app = Starlette()
+# Create a Connexion application
+app = AsyncApp(__name__, specification_dir="spec")
 
-# This needs to be specified and is most likely differente dependent on the framework
-# it needs to return a already validated decoded token content (dict)
-claims_callable = lambda: {
-    "sub": "<subject>",
-    "iss": "<issuer>",
-}
-
+# Add the ClaimValidatorMiddleware
 app.add_middleware(
     ClaimValidatorMiddleware,
-    claims_callable=claims_callable,
+    claims_callable=lambda scope: scope["extensions"]["connexion_context"]["token_info"],
     secured={
-        "^/secured$": {
+        "^/secured/?$": {
             "GET": {
                 "sub": {
                     "essential": True,
@@ -66,10 +71,10 @@ app.add_middleware(
                     "values": ["https://example.com"],
                 },
             },
-        }
+        },
     },
     skipped={
-        "^/skipped$": ["GET"],
+        "^/skipped/?$": ["GET"],
     },
 )
 ```
@@ -77,10 +82,11 @@ app.add_middleware(
 ## Examples
 
 ### Starlette Example
-Refer to the [app.py](examples/starlette/simple/app.py) file for a complete example using Starlette.
+For a full example using Starlette, check out the [app.py](examples/starlette/simple/app.py) file.
 
 ### Connexion Example
-Refer to the [app.py](examples/connexion/simple/app.py) file for a complete example using Connexion.
+For a basic example using Connexion, see the [app.py](examples/connexion/simple/app.py) file.
+For a more detailed example demonstrating automatic extraction and validation of token claims with Connexion, refer to the [app.py](examples/connexion/complex/app.py) file.
 
 ## Testing
 Run the tests using `pytest`:

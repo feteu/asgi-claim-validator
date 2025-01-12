@@ -42,9 +42,16 @@ from starlette.applications import Starlette
 
 app = Starlette()
 
+# This needs to be specified and is most likely differente dependent on the framework
+# it needs to return a already validated decoded token content (dict)
+claims_callable = lambda: {
+    "sub": "<subject>",
+    "iss": "<issuer>",
+}
+
 app.add_middleware(
     ClaimValidatorMiddleware,
-    claims_callable=my_claims_callable,
+    claims_callable=claims_callable,
     secured={
         "^/secured$": {
             "GET": {

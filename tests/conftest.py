@@ -20,21 +20,20 @@ def claims_callable() -> Callable:
         "nbf": int(time()),
     }
 
-@pytest.fixture
-def app(claims_callable: Callable) -> Starlette:
+async def blocked_endpoint(request: Request) -> JSONResponse:
+    return JSONResponse({"message": "blocked"})
 
-    async def blocked_endpoint(request: Request) -> JSONResponse:
-        return JSONResponse({"message": "blocked"})
+async def secured_endpoint(request: Request) -> JSONResponse:
+    return JSONResponse({"message": "secured"})
 
-    async def secured_endpoint(request: Request) -> JSONResponse:
-        return JSONResponse({"message": "secured"})
-
-    async def skipped_endpoint(request: Request) -> JSONResponse:
-        return JSONResponse({"message": "skipped"})
+async def skipped_endpoint(request: Request) -> JSONResponse:
+    return JSONResponse({"message": "skipped"})
 
 async def claim_validator_error_handler(request: Request, exc: ClaimValidatorException) -> JSONResponse:
     return JSONResponse({"error": f"{exc.title}"}, status_code=exc.status)
 
+@pytest.fixture
+def app(claims_callable: Callable) -> Starlette:
     routes = [
         Route("/blocked", blocked_endpoint, methods=["GET", "DELETE"]),
         Route("/secured", secured_endpoint, methods=["GET", "DELETE"]),
@@ -58,7 +57,7 @@ async def claim_validator_error_handler(request: Request, exc: ClaimValidatorExc
                         "values": ["https://example.com"],
                     },
                 },
-            },
+            }
         },
         skipped={
             "^/skipped$": ["GET"],

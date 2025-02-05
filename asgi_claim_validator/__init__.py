@@ -1,4 +1,4 @@
-from asgi_claim_validator.exceptions import (
+from .exceptions import (
     ClaimValidatorException,
     InvalidClaimsConfigurationException,
     InvalidClaimsTypeException,
@@ -10,8 +10,8 @@ from asgi_claim_validator.exceptions import (
     UnspecifiedMethodAuthenticationException,
     UnspecifiedPathAuthenticationException,
 )
-from asgi_claim_validator.middleware import ClaimValidatorMiddleware
-from asgi_claim_validator.types import (
+from .middleware import ClaimValidatorMiddleware
+from .types import (
     ClaimsCallableType,
     ClaimsType,
     SecuredCompiledType,

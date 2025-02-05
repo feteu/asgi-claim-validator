@@ -4,7 +4,7 @@ from joserfc.jwt import JWTClaimsRegistry
 from logging import DEBUG, getLogger
 from re import compile, error, IGNORECASE, NOFLAG, Pattern, RegexFlag
 from starlette.types import ASGIApp, Receive, Scope, Send
-from asgi_claim_validator.constants import (
+from .constants import (
     _DEFAULT_ANY_HTTP_METHODS,
     _DEFAULT_CLAIMS_CALLABLE,
     _DEFAULT_RAISE_ON_INVALID_CLAIM,
@@ -17,12 +17,12 @@ from asgi_claim_validator.constants import (
     _DEFAULT_SECURED,
     _DEFAULT_SKIPPED,
 )
-from asgi_claim_validator.decorators import (
+from .decorators import (
     validate_claims_callable,
     validate_secured,
     validate_skipped,
 )
-from asgi_claim_validator.exceptions import (
+from .exceptions import (
     InvalidClaimsTypeException,
     InvalidClaimValueException,
     MissingEssentialClaimException,
@@ -30,7 +30,7 @@ from asgi_claim_validator.exceptions import (
     UnspecifiedMethodAuthenticationException,
     UnspecifiedPathAuthenticationException,
 )
-from asgi_claim_validator.types import (
+from .types import (
     ClaimsCallableType, 
     SecuredCompiledType, 
     SecuredType, 

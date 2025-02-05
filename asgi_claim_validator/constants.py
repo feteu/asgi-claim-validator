@@ -1,5 +1,5 @@
 from re import escape
-from asgi_claim_validator.types import SecuredType, SkippedType, ClaimsCallableType
+from .types import SecuredType, SkippedType, ClaimsCallableType
 
 _DEFAULT_ANY_HTTP_METHODS: str = "*"
 _DEFAULT_ALL_HTTP_METHODS: list[str] = [

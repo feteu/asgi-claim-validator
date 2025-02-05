@@ -2,12 +2,12 @@ from collections.abc import Callable
 from jsonschema import validate
 from jsonschema.exceptions import SchemaError, ValidationError
 from logging import getLogger
-from asgi_claim_validator.constants import (
+from .constants import (
     _DEFAULT_CLAIMS_CALLABLE, 
     _DEFAULT_SECURED_JSON_SCHEMA,
     _DEFAULT_SKIPPED_JSON_SCHEMA,
 )
-from asgi_claim_validator.exceptions import (
+from .exceptions import (
     InvalidClaimsConfigurationException, 
     InvalidSecuredConfigurationException,
     InvalidSkippedConfigurationException,

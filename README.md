@@ -1,3 +1,4 @@
+[![PyPI - Downloads](https://img.shields.io/pypi/dm/asgi-claim-validator.svg)](https://pypi.org/project/asgi-claim-validator/)
 [![PyPI - License](https://img.shields.io/pypi/l/asgi-claim-validator)](https://www.gnu.org/licenses/gpl-3.0)
 [![PyPI - Version](https://img.shields.io/pypi/v/asgi-claim-validator.svg)](https://pypi.org/project/asgi-claim-validator/)
 [![PyPI - Python Version](https://img.shields.io/pypi/pyversions/asgi-claim-validator)](https://pypi.org/project/asgi-claim-validator/)
@@ -97,8 +98,8 @@ app = AsyncApp(__name__, specification_dir="spec")
 # Add the ClaimValidatorMiddleware
 app.add_middleware(
     ClaimValidatorMiddleware,
-    claims_callable=lambda scope: scope["extensions"]["connexion_context"]["token_info"],
-    secured={
+    claims_callable = lambda scope: scope["extensions"]["connexion_context"]["token_info"],
+    secured = {
         "^/secured/?$": {
             "GET": {
                 "sub": {
@@ -114,7 +115,7 @@ app.add_middleware(
             },
         },
     },
-    skipped={
+    skipped = {
         "^/skipped/?$": ["GET"],
     },
 )
@@ -136,7 +137,7 @@ The `secured` configuration is a dictionary that defines the paths and the claim
 
 Example:
 ```python
-secured={
+secured = {
     "^/secured/?$": {
         "GET": {
             "sub": {
@@ -160,7 +161,7 @@ The `skipped` configuration is a dictionary that defines the paths and methods t
 
 Example:
 ```python
-skipped={
+skipped = {
     "^/skipped/?$": ["GET"],
 }
 ```

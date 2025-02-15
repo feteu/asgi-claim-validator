@@ -98,8 +98,8 @@ app = AsyncApp(__name__, specification_dir="spec")
 # Add the ClaimValidatorMiddleware
 app.add_middleware(
     ClaimValidatorMiddleware,
-    claims_callable=lambda scope: scope["extensions"]["connexion_context"]["token_info"],
-    secured={
+    claims_callable = lambda scope: scope["extensions"]["connexion_context"]["token_info"],
+    secured = {
         "^/secured/?$": {
             "GET": {
                 "sub": {
@@ -115,7 +115,7 @@ app.add_middleware(
             },
         },
     },
-    skipped={
+    skipped = {
         "^/skipped/?$": ["GET"],
     },
 )
@@ -137,7 +137,7 @@ The `secured` configuration is a dictionary that defines the paths and the claim
 
 Example:
 ```python
-secured={
+secured = {
     "^/secured/?$": {
         "GET": {
             "sub": {
@@ -161,7 +161,7 @@ The `skipped` configuration is a dictionary that defines the paths and methods t
 
 Example:
 ```python
-skipped={
+skipped = {
     "^/skipped/?$": ["GET"],
 }
 ```

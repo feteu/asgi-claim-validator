@@ -1,3 +1,4 @@
+[![PyPI - Downloads](https://img.shields.io/pypi/dm/asgi-claim-validator.svg)](https://pypi.org/project/asgi-claim-validator/)
 [![PyPI - License](https://img.shields.io/pypi/l/asgi-claim-validator)](https://www.gnu.org/licenses/gpl-3.0)
 [![PyPI - Version](https://img.shields.io/pypi/v/asgi-claim-validator.svg)](https://pypi.org/project/asgi-claim-validator/)
 [![PyPI - Python Version](https://img.shields.io/pypi/pyversions/asgi-claim-validator)](https://pypi.org/project/asgi-claim-validator/)

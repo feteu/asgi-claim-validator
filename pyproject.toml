@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "asgi-claim-validator"
-version = "1.0.3"
+version = "1.0.4"
 description = "A focused ASGI middleware for validating additional claims within JWT tokens to enhance token-based workflows."
 authors = ["Fabio Greco <fabio.greco.github@gmail.com>"]
 maintainers = ["Fabio Greco <fabio.greco.github@gmail.com>"]
@@ -47,7 +47,7 @@ packages = [
 
 [tool.poetry.dependencies]
 python = ">=3.11,<4.0"
-joserfc = ">=1.0.1"
+joserfc = ">=1.2.2"
 jsonschema = ">=4.23.0"
 starlette = ">=0.45.2"
 
